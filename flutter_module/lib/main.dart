@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: MainRoutes.HOME,
+      initialRoute: Modular.initialRoute,
       navigatorKey: Modular.navigatorKey,
       onGenerateRoute: Modular.generateRoute,
     );

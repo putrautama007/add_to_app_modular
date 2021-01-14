@@ -1,20 +1,49 @@
+import 'package:core_module/platform_channel/platform_channel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_module/external/main_route.dart';
 
 class MyHomePage extends StatefulWidget {
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String _msg = "";
 
   void _incrementCounter() {
     setState(() {
       _counter++;
     });
+  }
+
+  Future<void> getData() async {
+    String message;
+    try {
+      var value =
+          await PlatformChannel.platform.invokeMethod('getBatteryLevel');
+      message = value.toString();
+    } on PlatformException catch (e) {
+      message = "Failed to get data from native : '${e.message}'.";
+    }
+
+    setState(() {
+      _msg = message;
+    });
+  }
+
+  Future<void> navigateToNewActivity() async {
+    try {
+      await PlatformChannel.platform.invokeMethod('navigateToNewActivity');
+    } on PlatformException catch (e) {}
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
   }
 
   @override
@@ -28,6 +57,9 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
+              'Battery level from native $_msg',
+            ),
+            Text(
               'You have pushed the button this many times:',
             ),
             Text(
@@ -39,6 +71,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 Modular.to.pushNamed(MainRoutes.MODULE_A);
               },
               child: Text("To Second Home Page"),
+            ),
+            FlatButton(
+              onPressed: () => navigateToNewActivity(),
+              child: Text("To Native Activity"),
             ),
           ],
         ),

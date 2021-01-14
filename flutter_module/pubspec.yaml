@@ -31,6 +31,8 @@ dependencies:
     path: ../flutter_module/flutter_a
   libraries_module:
     path: ../flutter_module/libraries_module
+  core_module:
+    path: ../flutter_module/core_module
 
 dev_dependencies:
   flutter_test:
